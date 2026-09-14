@@ -52,12 +52,15 @@ cd SIEG_salas
 
 ### 2. BACKEND:
 cd backend
+npm install
 node src/server.js
 
 ### 3. FRONTEND:
 cd frontend
+npm install
 npm run dev
 
 ### 3. BANCO DE DADOS:
 cd backend
+npx prisma migrate dev
 npx prima studio
