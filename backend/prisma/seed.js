@@ -50,7 +50,6 @@ async function main() {
       nome: 'Sala Auditório',
       capacidade: 50,
       descricao: 'Espaço amplo para palestras e eventos.',
-      precoLocacao: 150.00,
     },
   });
 
@@ -59,7 +58,6 @@ async function main() {
       nome: 'Sala Reuniões A',
       capacidade: 10,
       descricao: 'Sala de reuniões executiva com projetor.',
-      precoLocacao: 70.00,
     },
   });
 
@@ -68,7 +66,6 @@ async function main() {
       nome: 'Cabine Individual',
       capacidade: 1,
       descricao: 'Cabine privativa para chamadas de vídeo.',
-      precoLocacao: 15.00,
     },
   });
 
@@ -84,7 +81,8 @@ async function main() {
       idUsuario: membro.id,      
       idSala: salaReunioesA.id, 
       dia: amanha,
-      turno: 'TARDE',           
+      horaInicio: '14:00',
+      horaFim: '15:00',           
     },
   });
 

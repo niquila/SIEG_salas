@@ -1,18 +1,77 @@
 import * as reservasService from "../services/reservasService.js";
+import * as googleCalendarService from "../services/googleCalendarService.js";
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 
-/**
- * Cria uma nova reserva no sistema.
- * @param {import("express").Request} req - Objeto de requisição do Express contendo os dados da reserva em `req.body`
- * @param {import("express").Response} res - Resposta HTTP 201 Created com a reserva cadastrada
- * @param {import("express").NextFunction} next - Passa o erro para o manipulador central do Express
- * @returns {Promise<Response>} Retorna a resposta HTTP 201 Created com os dados da reserva
- */
 export async function create(req, res, next) {
   try {
+    const { idUsuario, idSala, horaInicio, horaFim } = req.body;
+
+    // 1. Verifica se o usuário existe e se já conectou o Google Calendar
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: Number(idUsuario) },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ error: "Usuário não encontrado." });
+    }
+
+    // Regra: Se exigimos que o calendário esteja conectado para reservar
+    if (!usuario.googleRefreshToken) {
+      return res.status(400).json({ 
+        error: "Você precisa conectar sua conta do Google Calendar antes de realizar uma reserva.",
+        authUrl: "/auth/google" // Opcional: já manda o link para ele conectar
+      });
+    }
+
+    // 2. Busca a sala antecipadamente para validar dados e checar o bloqueio de almoço
+    const sala = await prisma.sala.findUnique({
+      where: { id: Number(idSala) },
+    });
+
+    if (!sala) {
+      return res.status(404).json({ error: "Sala não encontrada." });
+    }
+
+    // === Validação de Bloqueio de Almoço (12:00 às 13:00) ===
+    if (sala.bloqueioAlmoco) {
+      const almocoInicio = "12:00";
+      const almocoFim = "13:00";
+
+      // Verifica se o horário da reserva cruza o intervalo das 12:00 às 13:00
+      if (horaInicio < almocoFim && horaFim > almocoInicio) {
+        return res.status(400).json({
+          error: "Esta sala possui bloqueio de reservas entre 12:00 e 13:00 (horário de almoço)."
+        });
+      }
+    }
+    // ========================================================
+
+    // 3. Cria a reserva no banco de dados se passar em todas as validações
     const novaReserva = await reservasService.createReserva(req.body);
-    return res.status(201).json(novaReserva);
+
+    const dataFormatada = new Date(novaReserva.dia).toISOString().split('T')[0];
+
+    const dadosReservaGoogle = {
+      salaNome: sala ? sala.nome : 'Sala',
+      unidade: sala?.unidade || 'Principal',
+      andar: sala?.andar || 'Térreo',
+      data: dataFormatada,
+      horaInicio: novaReserva.horaInicio,
+      horaFim: novaReserva.horaFim,
+    };
+
+    // 4. Dispara a criação do evento no Google Calendar
+    await googleCalendarService.criarEventoReserva(usuario, dadosReservaGoogle);
+
+    return res.status(201).json({
+      message: "Reserva criada e sincronizada com o Google Calendar com sucesso!",
+      reserva: novaReserva
+    });
+
   } catch (err) {
+    console.error("Erro ao criar reserva com sincronização:", err);
     next(err);
   }
 }
@@ -28,7 +87,6 @@ export async function getAll(req, res, next) {
 }
 
 // Busca uma reserva pelo seu ID.
-
 export async function getById(req, res, next) {
   try {
     const id = parseInt(req.params.id);
@@ -44,10 +102,7 @@ export async function getById(req, res, next) {
   }
 }
 
-
-
- //Exclui uma reserva do sistema pelo seu ID. 
-
+// Exclui uma reserva do sistema pelo seu ID.
 export async function remove(req, res, next) {
   try {
     const id = parseInt(req.params.id);

@@ -22,6 +22,11 @@ model Usuario{
   dtCriacao DateTime @default(now()) @map("dt_criacao")
   dtAtualizacao DateTime @updatedAt @map("dt_atualizacao")
   eAdmin Boolean @default(false) @map("e_admin")
+  googleAccessToken  String?
+  googleRefreshToken String?
+  googleTokenExpiry  DateTime?
+
+
   
   reservas Reserva[]
 
@@ -33,9 +38,12 @@ model Usuario{
 model Sala {
   id Int       @id @default(autoincrement())
   nome String
+  andar String?
+  unidade String?
   capacidade Int
+  status String   @default("disponivel")
   descricao String?
-  precoLocacao Float @map("preco_locacao")
+  bloqueioAlmoco Boolean  @default(false)
   dtCriacao DateTime @default(now()) @map("dt_criacao")
   dtAtualizacao DateTime @updatedAt @map("dt_atualizacao")
   
@@ -49,16 +57,15 @@ model Sala {
 model Reserva {
   id Int @id @default(autoincrement())
   dia DateTime
-  turno String
+  horaInicio String
+  horaFim    String
   dtCriacao DateTime @default(now()) @map("dt_criacao")
   idUsuario Int @map("id_usuario")
   idSala Int @map("id_sala")
-  
+
   usuario Usuario @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
-  
   sala Sala @relation(fields: [idSala], references: [id], onDelete: Cascade)
 
-@@unique([idSala, dia, turno])
-
+  @@unique([idSala, dia, horaInicio])
   @@map("reservas")
 }

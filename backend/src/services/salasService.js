@@ -1,21 +1,19 @@
 import prisma from "../config/prisma.js";
 
-/**
- * @param {Object} data - Dados do sala a ser cadastrado
- * @param {string} data.nome - Nome da sala
- * @param {number} data.capacidade - Capacidade da sala
- * @param {string} data.descricao - Descrição da sala
- * @param {number} data.precoLocacao - Preço de locação da sala 
- * @returns {Promise<Object>} Objeto do sala criado no banco de dados
- */
-
 // Cria uma nova sala no banco de dados
 export async function createSala(data) {
-  const { nome, capacidade, descricao, precoLocacao } = data;
+  const { nome, andar, unidade, capacidade, descricao, status, bloqueioAlmoco } = data;
 
-  // Criar sala 
   return await prisma.sala.create({
-    data: { nome, capacidade, descricao, precoLocacao },
+    data: { 
+      nome, 
+      andar, 
+      unidade, 
+      capacidade, 
+      descricao,
+      status: status || "disponivel",
+      bloqueioAlmoco: bloqueioAlmoco ?? false,
+    },
   });
 }
 
@@ -32,7 +30,7 @@ export async function getSalaById(id) {
 
   if (!sala) {
     const error = new Error("sala não encontrada.");
-    error.status = 404; // HTTP 404: Not Found
+    error.status = 404;
     error.code = "ROOM_NOT_FOUND";
     throw error;
   }
@@ -42,21 +40,30 @@ export async function getSalaById(id) {
 
 // Atualiza os dados de uma sala existente no banco de dados, após verificar se ela existe.
 export async function updateSala(id, data) {
-  const { nome, capacidade, descricao, precoLocacao } = data;
+  const { nome, andar, unidade, capacidade, descricao, status, bloqueioAlmoco } = data;
 
   const sala = await prisma.sala.findUnique({
     where: { id },
   });
+  
   if (!sala) {
     const error = new Error("sala não encontrada.");
-    error.status = 404; // HTTP 404: Not Found
+    error.status = 404;
     error.code = "ROOM_NOT_FOUND";
     throw error;
   }
 
   return await prisma.sala.update({
     where: { id },
-    data: { nome, capacidade, descricao, precoLocacao },
+    data: { 
+      nome, 
+      andar, 
+      unidade, 
+      capacidade, 
+      descricao,
+      ...(status !== undefined && { status }),
+      ...(bloqueioAlmoco !== undefined && { bloqueioAlmoco })
+    },
   });
 }
 
@@ -68,7 +75,7 @@ export async function deleteSala(id) {
 
   if (!sala) {
     const error = new Error("sala não encontrada.");
-    error.status = 404; 
+    error.status = 404;
     error.code = "ROOM_NOT_FOUND";
     throw error;
   }

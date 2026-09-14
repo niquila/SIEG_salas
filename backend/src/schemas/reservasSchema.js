@@ -1,14 +1,8 @@
 import { z } from "zod";
 
-// Validação do corpo da requisição para criação e atualização de reservas
-export const createReservaSchema = z.object({
+const horaRegex = /^([01]\d|2[0-3]):[0-5]\d$/; // formato HH:mm, 24 horas
 
-  turno: z
-  
-    .enum(["MANHA", "TARDE", "NOITE"], 
-        {errorMap: () => ({ message: "O turno deve ser MANHA, TARDE ou NOITE." }),
-    }),
-    
+const reservaBaseSchema = z.object({
   idUsuario: z.coerce
     .number({ required_error: "O campo ID do usuário é obrigatório." })
     .int("O ID do usuário deve ser um número inteiro.")
@@ -26,11 +20,29 @@ export const createReservaSchema = z.object({
       const [ano, mes, dia] = val.split("-").map(Number);
       const data = new Date(ano, mes - 1, dia);
       return data.getFullYear() === ano && data.getMonth() + 1 === mes && data.getDate() === dia;
-    }, {
-      message: "A data informada no campo 'dia' é inválida.",
-    }),
+    }, { message: "A data informada no campo 'dia' é inválida." }),
 
+  horaInicio: z
+    .string({ required_error: "O horário de início é obrigatório." })
+    .regex(horaRegex, "O horário de início deve estar no formato HH:mm."),
+
+  horaFim: z
+    .string({ required_error: "O horário de término é obrigatório." })
+    .regex(horaRegex, "O horário de término deve estar no formato HH:mm."),
 });
 
-// Para atualização parcial, todos os campos tornam-se opcionais
-export const updateReservaSchema = createReservaSchema.partial();
+export const createReservaSchema = reservaBaseSchema.refine(
+  (data) => data.horaFim > data.horaInicio,
+  {
+    message: "O horário de término deve ser depois do horário de início.",
+    path: ["horaFim"],
+  }
+);
+
+export const updateReservaSchema = reservaBaseSchema.partial().refine(
+  (data) => !data.horaInicio || !data.horaFim || data.horaFim > data.horaInicio,
+  {
+    message: "O horário de término deve ser depois do horário de início.",
+    path: ["horaFim"],
+  }
+);

@@ -2,21 +2,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, cadastrarUsuario } from "../services/api";
 import { salvarUsuarioLogado, salvarToken } from "../utils/auth";
+import logoSieg from "../assets/logo-sieg.png";
 
-// Componente Login: página de login e cadastro de usuários, permitindo autenticação e criação de novas contas.
 function Login() {
   const navigate = useNavigate();
   const [modoCadastro, setModoCadastro] = useState(false);
   const [form, setForm] = useState({ nome: "", email: "", senha: "", telefone: "", cpf: "" });
   const [erro, setErro] = useState("");
 
-  // Função para lidar com o envio do formulário de login ou cadastro.
   async function handleSubmit(e) {
     e.preventDefault();
     setErro("");
 
     try {
       if (modoCadastro) {
+        // Validação de e-mail corporativo SIEG
+        const emailLower = form.email.toLowerCase().trim();
+        if (!emailLower.includes("@sieg")) {
+          setErro("O cadastro é restrito a colaboradores SIEG.");
+          return;
+        }
+
         await cadastrarUsuario({
           nome: form.nome,
           email: form.email,
@@ -30,7 +36,6 @@ function Login() {
       } else {
         const dados = await login(form.email, form.senha);
 
-        // Salva os dados usando as funções exportadas pelo auth.js
         salvarUsuarioLogado(dados.usuario);
         salvarToken(dados.token);
 
@@ -46,96 +51,128 @@ function Login() {
   }
 
   return (
-    <div>
-      <div className="header-global-titulo">
-        <span>Coworking — Aluguel de salas</span>
-      </div>
-
-      <div className="container-form">
-        <h1>{modoCadastro ? "Criar conta" : "Login"}</h1>
-
-        {erro && <p style={{ color: "var(--cor-erro)", fontSize: "0.9rem" }}>{erro}</p>}
-
-        <form className="form-login" onSubmit={handleSubmit}>
-          {modoCadastro && (
-            <>
-              <div className="campo-grupo">
-                <label>Nome:</label>
-                <input
-                  type="text"
-                  placeholder="Seu nome completo"
-                  value={form.nome}
-                  onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                  required
+    <div className="pagina-wrapper">
+      {/* Topo Azul com a marca SIEG */}
+      <header className="header-azul">
+        <div className="header-conteudo" style={{ justifyContent: "center" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+              <img 
+                  src={logoSieg} 
+                  lt="SIEG Soluções Fiscais Estratégicas" 
+                  style={{ height: "100px", width: "auto", objectFit: "contain" }} 
                 />
-              </div>
+          </div>
+        </div>
+      </header>
 
-              <div className="campo-grupo">
-                <label>Telefone:</label>
-                <input
-                  type="text"
-                  placeholder="11999999999"
-                  value={form.telefone}
-                  onChange={(e) => setForm({ ...form, telefone: e.target.value })}
-                  required
-                />
-              </div>
+      {/* Container Principal */}
+      <main className="container-principal">
+        <div className="contador-salas-titulo">
+          <h3 style={{ color: "#FFFFFF", textAlign: "center", fontSize: "1.3rem", fontWeight: "700", marginBottom: "1.5rem" }}>
+            {modoCadastro ? "Criar nova conta" : "Acesse sua conta"}
+          </h3>
+        </div>
 
-              <div className="campo-grupo">
-                <label>CPF:</label>
-                <input
-                  type="text"
-                  placeholder="Somente números"
-                  value={form.cpf}
-                  onChange={(e) => setForm({ ...form, cpf: e.target.value })}
-                  required
-                />
-              </div>
-            </>
+        {/* Card do Formulário */}
+        <div className="card-busca-container" style={{ maxWidth: "420px" }}>
+          {erro && (
+            <p style={{ color: "#E53E3E", textAlign: "center", fontWeight: "600", fontSize: "0.9rem", marginBottom: "1rem" }}>
+              {erro}
+            </p>
           )}
 
-          <div className="campo-grupo">
-            <label>E-mail:</label>
-            <input
-              type="email"
-              placeholder="seuemail@exemplo.com"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
-            />
+          <form onSubmit={handleSubmit}>
+            {modoCadastro && (
+              <>
+                <div className="campo-grupo">
+                  <label>NOME COMPLETO</label>
+                  <input
+                    type="text"
+                    placeholder="Seu nome"
+                    value={form.nome}
+                    onChange={(e) => setForm({ ...form, nome: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="campo-grupo">
+                  <label>TELEFONE</label>
+                  <input
+                    type="text"
+                    placeholder="11999999999"
+                    value={form.telefone}
+                    onChange={(e) => setForm({ ...form, telefone: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="campo-grupo">
+                  <label>CPF</label>
+                  <input
+                    type="text"
+                    placeholder="Somente números"
+                    value={form.cpf}
+                    onChange={(e) => setForm({ ...form, cpf: e.target.value })}
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="campo-grupo">
+              <label>E-MAIL CORPORATIVO</label>
+              <input
+                type="email"
+                placeholder="seu.nome@sieg.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                required
+              />
+            </div>
+
+            <div className="campo-grupo">
+              <label>SENHA</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={form.senha}
+                onChange={(e) => setForm({ ...form, senha: e.target.value })}
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn-buscar-salas" style={{ marginTop: "1rem" }}>
+              {modoCadastro ? "Cadastrar" : "Entrar"}
+            </button>
+          </form>
+
+          {/* Alternador de Modo */}
+          <div style={{ marginTop: "1.5rem", borderTop: "1px solid #E2E8F0", paddingTop: "1.2rem", textAlign: "center" }}>
+            <span style={{ fontSize: "0.85rem", color: "#718096" }}>
+              {modoCadastro ? "Já possui uma conta?" : "Ainda não tem conta?"}
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setModoCadastro(!modoCadastro);
+                setErro("");
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#0046B8",
+                fontWeight: "700",
+                fontSize: "0.85rem",
+                marginLeft: "0.5rem",
+                cursor: "pointer",
+                textDecoration: "underline"
+              }}
+            >
+              {modoCadastro ? "Fazer Login" : "Criar Conta"}
+            </button>
           </div>
-
-          <div className="campo-grupo">
-            <label>Senha:</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={form.senha}
-              onChange={(e) => setForm({ ...form, senha: e.target.value })}
-              required
-            />
-          </div>
-
-          <button type="submit">
-            {modoCadastro ? "Cadastrar" : "Entrar"}
-          </button>
-        </form>
-
-        <p style={{ marginTop: "1.5rem", fontSize: "0.9rem" }}>
-          {modoCadastro ? "Já tem uma conta?" : "Ainda não tem conta?"}{" "}
-          <button
-            type="button"
-            className="botao-secundario"
-            style={{ padding: "0.3rem 0.8rem", fontSize: "0.85rem", marginLeft: "0.3rem" }}
-            onClick={() => {
-              setModoCadastro(!modoCadastro);
-              setErro("");
-            }}
-          >
-            {modoCadastro ? "Fazer Login" : "Criar Conta"}
-          </button>
-        </p>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

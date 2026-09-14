@@ -1,21 +1,29 @@
 import { z } from "zod";
-
-// Validação do corpo da requisição para criação e atualização de salas
+ 
+/**
+ * SCHEMA DE SALAS (Sala Schema)
+ *
+ * Define as regras de validação para cadastro e atualização de salas de coworking.
+ */
 export const createSalaSchema = z.object({
   nome: z
     .string({ required_error: "O campo nome é obrigatório." })
     .min(2, "O nome deve ter pelo menos 2 caracteres."),
-
+ 
   capacidade: z.coerce
     .number({ required_error: "O campo capacidade é obrigatório." })
     .int("A capacidade deve ser um número inteiro.")
     .positive("A capacidade deve ser maior que zero."),
-
+ 
   descricao: z.string().optional().nullable(),
 
-  precoLocacao: z.coerce
-    .number({ required_error: "O campo preço de locação é obrigatório." })
-    .min(0, "O preço de locação deve ser maior ou igual a zero."),
-});
+  unidade: z.string({ required_error: "O campo unidade é obrigatório." }),
 
+  andar: z.string({ required_error: "O campo andar é obrigatório." }),
+
+  status: z.string().optional().nullable(),
+
+  bloqueioAlmoco: z.boolean().optional().default(false),
+});
+ 
 export const updateSalaSchema = createSalaSchema.partial();

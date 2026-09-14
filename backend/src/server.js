@@ -4,6 +4,7 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import { ZodError } from 'zod';
 import routes from './routes/index.js';
+import googleRoutes from './routes/googleRoute.js'; //IMPORTAR AS ROTAS DO GOOGLE AQUI
 import { swaggerDocument } from './config/swagger.js';
 
 // Inicializa a aplicação Express, ponto de entrada do servidor.
@@ -18,6 +19,8 @@ app.use(express.json());
 // Configuração do Swagger UI para documentação da API
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api', routes);
+
+app.use('/', googleRoutes); //REGISTRAR AS ROTAS DO GOOGLE AQUI 
 
 // Middleware global de tratamento de erros
 app.use((err, req, res, next) => {

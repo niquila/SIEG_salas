@@ -21,7 +21,7 @@ export async function createUsuario(data) {
   });
   if (emailExistente) {
     const error = new Error("E-mail já cadastrado.");
-    error.status = 409; 
+    error.status = 409;
     error.code = "EMAIL_ALREADY_EXISTS";
     throw error;
   }
@@ -31,12 +31,11 @@ export async function createUsuario(data) {
   });
   if (cpfExistente) {
     const error = new Error("CPF já cadastrado.");
-    error.status = 409; // HTTP 409: Conflict
+    error.status = 409;
     error.code = "CPF_ALREADY_EXISTS";
     throw error;
   }
 
-  //Gerar o hash da senha antes de salvar (nunca salvar senha em texto puro)
   const senhaHash = await bcrypt.hash(senha, 10);
 
   return await prisma.usuario.create({
@@ -57,7 +56,7 @@ export async function getUsuarioById(id) {
 
   if (!usuario) {
     const error = new Error("Usuário não encontrado.");
-    error.status = 404; // HTTP 404: Not Found
+    error.status = 404;
     error.code = "USER_NOT_FOUND";
     throw error;
   }
@@ -65,48 +64,40 @@ export async function getUsuarioById(id) {
   return usuario;
 }
 
-// Atualiza os dados de um usuário.
+/**
+ * Atualiza os dados de um usuário.
+ *
+ * 💡 O campo `email` é IGNORADO de propósito, mesmo que venha em `data`.
+ * O e-mail é definido só na criação da conta e nunca pode ser alterado depois —
+ * isso é reforçado tanto aqui (backend) quanto no schema de validação (Zod)
+ * e no frontend (campo desabilitado na tela de perfil).
+ */
 export async function updateUsuario(id, data) {
-  const { nome, email, senha, telefone, cpf } = data;
+  const { nome, senha, telefone, cpf } = data; // "email" não é extraído de propósito
 
-  //Verificar se o usuário existe
   const usuario = await prisma.usuario.findUnique({
     where: { id },
   });
   if (!usuario) {
     const error = new Error("Usuário não encontrado.");
-    error.status = 404; 
+    error.status = 404;
     error.code = "USER_NOT_FOUND";
     throw error;
   }
 
-  // Se for atualizar email e ele for diferente do e-mail atual do usuário, verificar se já existe outro usuário com o mesmo e-mail
-  if (email && email !== usuario.email) {
-    const emailExistente = await prisma.usuario.findUnique({
-      where: { email },
-    });
-    if (emailExistente) {
-      const error = new Error("E-mail já em uso por outro usuário.");
-      error.status = 409; // HTTP 409: Conflict
-      error.code = "EMAIL_ALREADY_EXISTS";
-      throw error;
-    }
-  }
-
-  //Se for atualizar CPF e ele for diferente do CPF atual do usuário, verificar se já existe outro usuário com o mesmo CPF
   if (cpf && cpf !== usuario.cpf) {
     const cpfExistente = await prisma.usuario.findUnique({
       where: { cpf },
     });
     if (cpfExistente) {
       const error = new Error("CPF já em uso por outro usuário.");
-      error.status = 409; // HTTP 409: Conflict
+      error.status = 409;
       error.code = "CPF_ALREADY_EXISTS";
       throw error;
     }
   }
 
-  const dataToUpdate = { nome, email, telefone, cpf };
+  const dataToUpdate = { nome, telefone, cpf };
   if (senha) {
     dataToUpdate.senha = await bcrypt.hash(senha, 10);
   }
@@ -117,21 +108,19 @@ export async function updateUsuario(id, data) {
   });
 }
 
-//Remove um usuário existente do banco de dados.
+// Remove um usuário existente do banco de dados.
 export async function deleteUsuario(id) {
-
   const usuario = await prisma.usuario.findUnique({
     where: { id },
   });
 
   if (!usuario) {
     const error = new Error("Usuário não encontrado.");
-    error.status = 404; // HTTP 404: Not Found
+    error.status = 404;
     error.code = "USER_NOT_FOUND";
     throw error;
   }
 
-  //Deletar usuário do banco
   await prisma.usuario.delete({
     where: { id },
   });

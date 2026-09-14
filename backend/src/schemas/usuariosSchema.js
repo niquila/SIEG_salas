@@ -2,14 +2,19 @@ import { z } from "zod";
 
 // Validação do corpo da requisição para criação e atualização de usuários
 
+const emailSchema = z
+  .string({ required_error: "O campo email é obrigatório." })
+  .email("E-mail com formato inválido.")
+  .refine((val) => val.toLowerCase().includes("@sieg"), {
+    message: "Apenas e-mails institucionais (@sieg...) podem se cadastrar.",
+  });
+
 export const createUsuarioSchema = z.object({
   nome: z
     .string({ required_error: "O campo nome é obrigatório." })
     .min(2, "O nome deve ter pelo menos 2 caracteres."),
 
-  email: z
-    .string({ required_error: "O campo email é obrigatório." })
-    .email("E-mail com formato inválido."),
+  email: emailSchema,
 
   senha: z
     .string({ required_error: "O campo senha é obrigatório." })
@@ -24,4 +29,11 @@ export const createUsuarioSchema = z.object({
     .min(1, "O campo cpf é obrigatório."),
 });
 
-export const updateUsuarioSchema = createUsuarioSchema.partial();
+export const updateUsuarioSchema = z
+  .object({
+    nome: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
+    telefone: z.string().min(1, "O campo telefone é obrigatório."),
+    cpf: z.string().min(1, "O campo cpf é obrigatório."),
+    senha: z.string().min(1, "A senha não pode ficar em branco."),
+  })
+  .partial();

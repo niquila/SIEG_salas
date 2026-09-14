@@ -1,347 +1,406 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap');
-
-:root {
-  --cor-preto: #111111;
-  --cor-branco: #ffffff;
-  --cor-cinza-claro: #f7f7f5;
-  --cor-cinza-borda: #e2e2de;
-  --cor-cinza-texto: #6b6b6b;
-  --cor-erro: #b3261e;
-  --cor-sucesso: #2e7d32;
-
-  --fonte-titulo: "Fraunces", Georgia, serif;
-  --fonte-corpo: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-}
-
+/* Reset básico e fundo da página */
 body {
   margin: 0;
-  background-color: var(--cor-branco);
-  color: var(--cor-preto);
-  font-family: var(--fonte-corpo);
-  -webkit-font-smoothing: antialiased;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #F4F6F9;
+  color: #2D3748;
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--fonte-titulo);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--cor-preto);
+.pagina-wrapper {
+  background-color: #F4F6F9;
+  min-height: 100vh;
 }
 
-h1 {
-  font-size: 2.2rem;
-  font-weight: 500;
+/* 1. TOPO AZUL & HEADER */
+.header-azul {
+  background-color: #0046B8;
+  color: #FFFFFF;
+  padding: 1.5rem 3rem 6rem 3rem;
 }
 
-p, label, span, li {
-  font-family: var(--fonte-corpo);
-  color: var(--cor-preto);
+.header-conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-a {
-  color: var(--cor-preto);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-a:hover {
-  color: var(--cor-cinza-texto);
-}
-
-/* ---------- Header Global de Subtítulo ---------- */
-
-.header-global-titulo {
-  text-align: center;
-  padding: 1.25rem 1rem;
-  background-color: var(--cor-cinza-claro);
-  border-bottom: 1px solid var(--cor-cinza-borda);
-}
-
-.header-global-titulo span {
-  font-family: var(--fonte-titulo);
-  font-size: 1.5rem;
+.logo-sieg {
+  font-size: 1.3rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--cor-preto);
+  letter-spacing: 0.5px;
+  color: #FFFFFF;
+  margin: 0;
 }
 
-/* ---------- Formulários ---------- */
+.logo-sieg span {
+  font-size: 0.7rem;
+  font-weight: 400;
+  display: block;
+  opacity: 0.85;
+  margin-top: 2px;
+}
 
-input,
-select,
-textarea {
-  font-family: var(--fonte-corpo);
+/* Links de Navegação */
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-item {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
   font-size: 0.95rem;
-  padding: 0.65rem 0.85rem;
-  border: 1px solid var(--cor-cinza-borda);
-  border-radius: 6px;
-  background-color: var(--cor-branco);
-  color: var(--cor-preto);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--cor-preto);
-  box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.05);
-}
-
-input::placeholder {
-  color: var(--cor-cinza-texto);
-}
-
-/* ---------- Botões ---------- */
-
-button {
-  font-family: var(--fonte-corpo);
-  font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.65rem 1.4rem;
-  border-radius: 999px;
-  border: 1px solid var(--cor-preto);
-  background-color: var(--cor-preto);
-  color: var(--cor-branco);
+  transition: color 0.2s ease;
+}
+
+.nav-item:hover,
+.nav-item.ativo {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* Perfil do Usuário */
+.usuario-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
   cursor: pointer;
+}
+
+.avatar-icone {
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 2. CARDS FLUTUANTES SUPERIORES */
+.container-principal {
+  max-width: 1000px;
+  margin: -4rem auto 3rem auto;
+  padding: 0 1.5rem;
+}
+
+.grid-acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card-acao {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  border: 2px solid transparent;
   transition: all 0.2s ease;
 }
 
-button:hover {
-  background-color: var(--cor-branco);
-  color: var(--cor-preto);
-  transform: translateY(-1px);
+.card-acao.ativo {
+  border-color: #0046B8;
 }
 
-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.botao-secundario {
-  background-color: var(--cor-branco);
-  color: var(--cor-preto);
-  border: 1px solid var(--cor-cinza-borda);
-}
-
-.botao-secundario:hover {
-  background-color: var(--cor-preto);
-  color: var(--cor-branco);
-  border-color: var(--cor-preto);
-}
-
-/* ---------- Header / Navbar ---------- */
-
-nav {
+.card-acao .icone-container {
+  background-color: #EBF3FF;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
   display: flex;
-  align-items: center;
-  gap: 2rem;
-  padding: 1.25rem 2rem;
-  background-color: var(--cor-preto);
-  border-bottom: 1px solid var(--cor-preto);
-}
-
-nav a {
-  font-family: var(--fonte-corpo);
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-decoration: none;
-  color: #a3a3a3;
-  transition: color 0.2s ease, border-color 0.2s ease;
-  padding-bottom: 4px;
-}
-
-nav a:hover {
-  color: var(--cor-branco);
-}
-
-/* Indicador de Página Ativa */
-nav a.ativo {
-  color: var(--cor-branco);
-  border-bottom: 2px solid var(--cor-branco);
-}
-
-nav button {
-  margin-left: auto;
-  background-color: var(--cor-branco);
-  color: var(--cor-preto);
-  border-color: var(--cor-branco);
-}
-
-nav button:hover {
-  background-color: var(--cor-preto);
-  color: var(--cor-branco);
-  border-color: var(--cor-branco);
-}
-
-/* ---------- Páginas e Tipografia ---------- */
-
-.pagina-salas,
-.pagina-reservas {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem 1.5rem;
-}
-
-.pagina-salas h1,
-.pagina-reservas h1 {
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.subtitulo-pagina {
-  text-align: center;
-  color: var(--cor-cinza-texto);
-  font-size: 0.95rem;
-  margin-top: 0;
-  margin-bottom: 3rem;
-}
-
-/* ---------- Cards com Sombra Suave (Elevated) ---------- */
-
-.grid-salas,
-.grid-reservas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.75rem;
-}
-
-.card-sala,
-.card-reserva {
-  background-color: var(--cor-branco);
-  border: 1px solid var(--cor-cinza-borda);
-  border-radius: 12px;
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.card-sala:hover,
-.card-reserva:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
-  border-color: var(--cor-preto);
-}
-
-.card-sala .nome,
-.card-reserva .nome {
-  font-family: var(--fonte-titulo);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.card-sala .descricao,
-.card-reserva .descricao {
-  font-size: 0.9rem;
-  color: var(--cor-cinza-texto);
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* Badges / Tags nas Salas */
-.tags-container {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.badge {
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background-color: var(--cor-cinza-claro);
-  color: var(--cor-preto);
-  border: 1px solid var(--cor-cinza-borda);
-}
-
-.badge.destaque {
-  border-color: var(--cor-preto);
-  background-color: var(--cor-branco);
-  font-weight: 600;
-}
-
-.botao-reservar {
-  margin-top: 0.5rem;
-  align-self: flex-start;
-}
-
-/* ---------- Formulários Centralizados ---------- */
-
-.container-form {
-  max-width: 400px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
+  flex-shrink: 0;
 }
 
-.container-form h1 {
-  text-align: center;
-  margin-bottom: 0.5rem;
-  width: 100%;
+.card-acao h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1A202C;
+  margin: 0 0 0.2rem 0;
 }
 
-.form-login {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
+.card-acao p {
+  font-size: 0.85rem;
+  color: #718096;
+  margin: 0;
+}
+
+/* 3. CARD DE BUSCA DE SALAS */
+.card-busca-container {
+  background-color: #FFFFFF;
+  border-radius: 24px;
+  padding: 2rem 2.5rem;
+  max-width: 650px;
+  margin: 0 auto 2.5rem auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.form-busca-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .campo-grupo {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
 }
 
-.campo-grupo label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-align: center;
-  width: 100%;
+.campo-grupo label, .label-unidade {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #718096;
+  letter-spacing: 0.5px;
 }
 
-.campo-grupo input {
-  width: 100%;
-  text-align: center;
-}
-
-/* ---------- Container Admin ---------- */
-
-.container-admin-form {
-  max-width: 480px;
-  margin: 0 auto 3.5rem auto;
-  padding: 2.25rem;
-  background-color: var(--cor-branco);
-  border: 1px solid var(--cor-cinza-borda);
+/* Estilo unificado para inputs e selects do card de busca superior */
+.campo-grupo input,
+.campo-grupo select {
+  background-color: #F7FAFC;
+  border: 1px solid #EDF2F7;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: #2D3748;
+}
+
+.linha-horarios {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.coluna-filtros-unidade {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
-.container-admin-form h2 {
-  font-size: 1.4rem;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
+.pills-unidade {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.pill-btn {
+  background-color: #F7FAFC;
+  border: 1px solid #EDF2F7;
+  border-radius: 20px;
+  padding: 0.65rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #4A5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pill-btn.ativo {
+  background-color: #0046B8;
+  border-color: #0046B8;
+  color: #FFFFFF;
+}
+
+.btn-buscar-salas {
+  width: 100%;
+  background-color: #0046B8;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 0.9rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+/* 4. LISTA HORIZONTAL DE SALAS */
+.contador-salas-titulo h3 {
+  font-size: 1.2rem;
+  color: #2D3748;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.lista-salas-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card-sala-horizontal-wrapper {
+  background-color: #FFFFFF;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+}
+
+.card-sala-horizontal {
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.sala-info-esquerda h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2D3748;
+  margin: 0 0 0.2rem 0;
+}
+
+.sala-codigo {
+  font-size: 0.8rem;
+  color: #A0AEC0;
+}
+
+.sala-info-centro {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #718096;
+  font-size: 0.85rem;
+}
+
+.badge-disponivel {
+  background-color: #E6FFFA;
+  color: #38B2AC;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-reservado {
+  background-color: #FFF5F5;
+  color: #E53E3E;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Form Inline de Confirmação */
+.form-reserva-inline {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid #EDF2F7;
+  background-color: #FAFCFE;
+}
+
+.campos-inline {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.campos-inline label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: #4A5568;
+  flex: 1;
+  font-weight: 600;
+}
+
+/* Estilo unificado (Padding, Borda e Arredondamento iguais) para Inputs e Selects do form inline */
+.campos-inline input,
+.campos-inline select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #CBD5E0;
+  margin-top: 0.3rem;
+  box-sizing: border-box;
+  width: 100%;
+  background-color: #FFFFFF;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #2D3748;
+  height: 38px; /* Força a mesma altura exata em ambos */
+}
+
+.btn-confirmar-inline {
+  width: 100%;
+  background-color: #38B2AC;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sem-resultados {
   text-align: center;
+  color: #718096;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+
+/* --- RESPONSIVIDADE PARA CELULARES --- */
+@media (max-width: 768px) {
+  .header-azul {
+    padding: 1.5rem 1rem 5rem 1rem;
+  }
+
+  .header-conteudo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-azul img {
+    height: 60px !important;
+  }
+
+  .usuario-info {
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 0.75rem;
+  }
+
+  .grid-acoes {
+    grid-template-columns: 1fr;
+  }
+
+  .form-busca-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .card-sala-horizontal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  
+  .campos-inline {
+    flex-direction: column;
+  }
 }

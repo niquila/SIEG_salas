@@ -8,6 +8,10 @@ export function getUsuarioLogado() {
   return usuario ? JSON.parse(usuario) : null;
 }
 
+export function atualizarUsuarioLogado(usuario) {
+  localStorage.setItem("usuario", JSON.stringify(usuario));
+}
+
 export function salvarToken(token) {
   localStorage.setItem("token", token);
 }
@@ -19,6 +23,11 @@ export function getToken() {
 export function logout() {
   localStorage.removeItem("usuario");
   localStorage.removeItem("token");
+}
+
+// Mantido para compatibilidade caso outro arquivo chame fazerLogout
+export function fazerLogout() {
+  logout();
 }
 
 export function estaLogado() {
