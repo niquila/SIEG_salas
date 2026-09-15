@@ -1,9 +1,22 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { Pool } from 'pg'
+import { attachDatabasePool } from '@vercel/functions'
 
-// Configura o Prisma Client para logar queries, informações, avisos e erros no ambiente de desenvolvimento
+const globalForPrisma = globalThis
 
-const prisma = new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
-});
+const pool = globalForPrisma.pgPool ?? new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 1,
+})
 
-export default prisma;
+attachDatabasePool(pool)
+
+const adapter = new PrismaPg({ pool })
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.pgPool = pool
+  globalForPrisma.prisma = prisma
+}

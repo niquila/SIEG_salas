@@ -1,8 +1,6 @@
 import * as reservasService from "../services/reservasService.js";
 import * as googleCalendarService from "../services/googleCalendarService.js";
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from "../config/prisma.js";
 
 export async function create(req, res, next) {
   try {

@@ -1,5 +1,4 @@
-import prisma from "../config/prisma.js";
-
+import { prisma } from "../config/prisma.js";
 /**
  * @param {Object} params
  * @param {number} params.idSala - ID da sala

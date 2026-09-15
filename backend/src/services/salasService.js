@@ -1,4 +1,4 @@
-import prisma from "../config/prisma.js";
+import { prisma } from "../config/prisma.js";
 
 // Cria uma nova sala no banco de dados
 export async function createSala(data) {

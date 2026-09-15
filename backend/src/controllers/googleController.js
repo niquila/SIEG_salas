@@ -1,7 +1,5 @@
 import * as googleService from "../services/googleCalendarService.js";
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from "../config/prisma.js";
 
 // Redireciona o usuário para a tela de login do Google, capturando o userId da query
 export function redirectToGoogle(req, res) {

@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
-import prisma from "../config/prisma.js";
-
+import { prisma } from "../config/prisma.js";
 /**
  * @param {Object} data - Dados do usuário a ser cadastrado
  * @param {string} data.nome - Nome completo

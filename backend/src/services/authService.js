@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import prisma from "../config/prisma.js";
-
+import { prisma } from "../config/prisma.js";
 /**
  * @param {Object} credentials - Objeto contendo as credenciais de acesso
  * @param {string} credentials.email - E-mail do usuário
