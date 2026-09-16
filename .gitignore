@@ -2,3 +2,5 @@ node_modules/
 .env
 generated/
 backend/prisma/
+.vercel
+.env*
