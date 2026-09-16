@@ -12,7 +12,7 @@ const pool = globalForPrisma.pgPool ?? new Pool({
 
 attachDatabasePool(pool)
 
-const adapter = new PrismaPg({ pool })
+const adapter = new PrismaPg(pool)
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
 

@@ -57,8 +57,8 @@ model Sala {
 model Reserva {
   id Int @id @default(autoincrement())
   dia DateTime
-  horaInicio DateTime
-  horaFim    DateTime
+  horaInicio String
+  horaFim    String
   dtCriacao DateTime @default(now()) @map("dt_criacao")
   idUsuario Int @map("id_usuario")
   idSala Int @map("id_sala")
