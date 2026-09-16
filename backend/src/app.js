@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
 import { ZodError } from 'zod';
 import routes from './routes/index.js';
 import googleRoutes from './routes/googleRoute.js';
@@ -12,7 +11,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/docs/openapi.json', (req, res) => res.json(swaggerDocument));
+
+app.get('/docs', (req, res) => {
+  res.send(`<!DOCTYPE html>
+<html>
+<head>
+  <title>API Docs</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css" />
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <script>
+    window.onload = () => {
+      window.ui = SwaggerUIBundle({
+        url: '/docs/openapi.json',
+        dom_id: '#swagger-ui',
+      });
+    };
+  </script>
+</body>
+</html>`);
+});
+
 app.use('/api', routes);
 app.use('/', googleRoutes);
 
