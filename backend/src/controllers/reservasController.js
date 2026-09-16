@@ -6,21 +6,13 @@ export async function create(req, res, next) {
   try {
     const { idUsuario, idSala, horaInicio, horaFim } = req.body;
 
-    // 1. Verifica se o usuário existe e se já conectou o Google Calendar
+    // 1. Verifica se o usuário existe
     const usuario = await prisma.usuario.findUnique({
       where: { id: Number(idUsuario) },
     });
 
     if (!usuario) {
       return res.status(404).json({ error: "Usuário não encontrado." });
-    }
-
-    // Regra: Se exigimos que o calendário esteja conectado para reservar
-    if (!usuario.googleRefreshToken) {
-      return res.status(400).json({ 
-        error: "Você precisa conectar sua conta do Google Calendar antes de realizar uma reserva.",
-        authUrl: "/auth/google" // Opcional: já manda o link para ele conectar
-      });
     }
 
     // 2. Busca a sala antecipadamente para validar dados e checar o bloqueio de almoço
@@ -60,11 +52,23 @@ export async function create(req, res, next) {
       horaFim: novaReserva.horaFim,
     };
 
-    // 4. Dispara a criação do evento no Google Calendar
-    await googleCalendarService.criarEventoReserva(usuario, dadosReservaGoogle);
+    // 4. Sincroniza com o Google Calendar sem bloquear: a reserva já está
+    // persistida, então uma falha aqui não pode invalidá-la.
+    let sincronizadoGoogle = false;
+
+    if (usuario.googleRefreshToken) {
+      try {
+        await googleCalendarService.criarEventoReserva(usuario, dadosReservaGoogle);
+        sincronizadoGoogle = true;
+      } catch (erroGoogle) {
+        console.error("Falha ao sincronizar a reserva com o Google Calendar:", erroGoogle);
+      }
+    }
 
     return res.status(201).json({
-      message: "Reserva criada e sincronizada com o Google Calendar com sucesso!",
+      message: sincronizadoGoogle
+        ? "Reserva criada e sincronizada com o Google Calendar com sucesso!"
+        : "Reserva criada com sucesso!",
       reserva: novaReserva
     });
 
