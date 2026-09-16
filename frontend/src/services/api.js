@@ -17,8 +17,9 @@ async function request(endpoint, options = {}) {
     headers,
   });
 
-  // Token ausente/inválido/expirado: desloga e manda de volta pro login
-  if (res.status === 401) {
+  // Token ausente/inválido/expirado: desloga e manda de volta pro login.
+  // No login o 401 significa credencial inválida, então a mensagem é exibida na tela.
+  if (res.status === 401 && endpoint !== "/auth/login") {
     logout();
     window.location.href = "/";
     throw new Error("Sessão expirada. Faça login novamente.");

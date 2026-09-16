@@ -13,8 +13,11 @@ function Salas() {
   const [erro, setErro] = useState("");
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
-  // Pega a data de hoje no formato YYYY-MM-DD para bloquear dias passados
-  const dataHoje = new Date().toISOString().split("T")[0];
+  // Pega a data de hoje no formato YYYY-MM-DD para bloquear dias passados.
+  // Usa o fuso local (e não toISOString, que converte para UTC): à noite o UTC
+  // já virou o dia seguinte, e o app tratava amanhã como se fosse hoje.
+  const agoraHoje = new Date();
+  const dataHoje = `${agoraHoje.getFullYear()}-${String(agoraHoje.getMonth() + 1).padStart(2, "0")}-${String(agoraHoje.getDate()).padStart(2, "0")}`;
 
   // Filtros de busca
   const [filtroDia, setFiltroDia] = useState(dataHoje);
