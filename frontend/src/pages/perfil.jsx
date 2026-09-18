@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsuarioLogado, atualizarUsuarioLogado, fazerLogout } from "../utils/auth";
+import { getUsuario } from "../services/api";
 import logoSieg from "../assets/logo-sieg.png";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const API_BASE_URL = API_URL.replace(/\/api\/?$/, "");
 
 function Perfil() {
   const navigate = useNavigate();
@@ -21,7 +25,32 @@ function Perfil() {
     setUsuario(user);
     setNome(user.nome || "");
     setTelefone(user.telefone || "");
+
+    // Após voltar do fluxo de autenticação do Google, busca o usuário
+    // atualizado (com o token salvo) e substitui o que está em cache.
+    const params = new URLSearchParams(window.location.search);
+    const googleStatus = params.get("google");
+    if (googleStatus) {
+      if (googleStatus === "conectado") {
+        getUsuario(user.id)
+          .then((atualizado) => {
+            atualizarUsuarioLogado(atualizado);
+            setUsuario(atualizado);
+            setMensagem("Conta do Google Calendar conectada com sucesso!");
+            setTimeout(() => setMensagem(""), 3000);
+          })
+          .catch(() => {});
+      } else {
+        setMensagem("Não foi possível conectar sua conta do Google. Tente novamente.");
+        setTimeout(() => setMensagem(""), 3000);
+      }
+      navigate("/perfil", { replace: true });
+    }
   }, [navigate]);
+
+  function handleConectarGoogle() {
+    window.location.href = `${API_BASE_URL}/auth/google?userId=${usuario.id}`;
+  }
 
   function handleSalvar(e) {
     e.preventDefault();
@@ -119,6 +148,43 @@ function Perfil() {
               >
                 Editar Perfil
               </button>
+
+              <div style={{ borderTop: "1px solid #E2E8F0", margin: "1rem 0" }}></div>
+
+              <div className="campo-grupo">
+                <label>GOOGLE CALENDAR</label>
+                {usuario.googleRefreshToken ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      color: "#2F855A",
+                      fontWeight: "600",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    Conta conectada
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                    <p style={{ margin: 0, fontSize: "0.85rem", color: "#718096" }}>
+                      Conecte sua conta do Google para poder reservar salas e ter os agendamentos sincronizados com seu Google Calendar.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleConectarGoogle}
+                      className="btn-buscar-salas"
+                      style={{ margin: 0 }}
+                    >
+                      Conectar Google Calendar
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <div style={{ borderTop: "1px solid #E2E8F0", margin: "1rem 0" }}></div>
 

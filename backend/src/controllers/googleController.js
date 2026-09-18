@@ -39,11 +39,11 @@ export async function handleGoogleCallback(req, res) {
       },
     });
     
-    return res.status(200).json({
-      message: "Conta do Google Calendar vinculada com sucesso ao seu usuário!",
-    });
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    return res.redirect(`${frontendUrl}/perfil?google=conectado`);
   } catch (error) {
     console.error("Erro no callback do Google:", error);
-    return res.status(500).json({ error: "Falha na autenticação com o Google." });
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    return res.redirect(`${frontendUrl}/perfil?google=erro`);
   }
 }

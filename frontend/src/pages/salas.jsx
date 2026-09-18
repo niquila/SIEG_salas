@@ -145,6 +145,13 @@ function Salas() {
       return;
     }
 
+    if (!usuario?.googleRefreshToken) {
+      if (confirm("Você precisa conectar sua conta do Google Calendar antes de reservar uma sala. Ir para o perfil agora?")) {
+        navigate("/perfil");
+      }
+      return;
+    }
+
     const novoEstadoSala = salaSelecionada === sala.id ? null : sala.id;
     setSalaSelecionada(novoEstadoSala);
     
@@ -198,6 +205,12 @@ function Salas() {
 
   async function handleConfirmarReserva(e) {
     e.preventDefault();
+
+    if (!usuario?.googleRefreshToken) {
+      alert("Você precisa conectar sua conta do Google Calendar antes de reservar uma sala.");
+      navigate("/perfil");
+      return;
+    }
 
     if (dia < dataHoje) {
       alert("Você não pode realizar reservas para dias que já passaram!");

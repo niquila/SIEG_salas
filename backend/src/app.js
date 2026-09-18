@@ -1,5 +1,12 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import path from 'path';
 import express from 'express';
+
+// O .env fica na raiz do monorepo, não em backend/, então precisa
+// do caminho explícito para funcionar independente do cwd local.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 import cors from 'cors';
 import { ZodError } from 'zod';
 import routes from './routes/index.js';
