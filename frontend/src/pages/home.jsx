@@ -59,6 +59,19 @@ function Home() {
             >
               Política de Privacidade
             </Link>
+            <Link
+              to="/termos"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                color: "#0046B8",
+                fontWeight: "600",
+                fontSize: "0.9rem",
+                textDecoration: "none",
+              }}
+            >
+              Termos de Uso
+            </Link>
           </div>
         </div>
       </main>

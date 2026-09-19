@@ -5,6 +5,7 @@ import Salas from "./pages/salas";
 import Perfil from "./pages/perfil";
 import AdminSalas from "./pages/admin";
 import Privacidade from "./pages/privacidade";
+import Termos from "./pages/termos";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/admin" element={<AdminSalas />} />
         <Route path="/privacidade" element={<Privacidade />} />
+        <Route path="/termos" element={<Termos />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
