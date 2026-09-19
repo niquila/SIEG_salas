@@ -33,7 +33,6 @@ function AdminSalas() {
     email: "",
     senha: "",
     telefone: "",
-    cpf: "",
   });
 
   const [erro, setErro] = useState("");
@@ -131,7 +130,7 @@ function AdminSalas() {
     try {
       await cadastrarUsuario(formUsuario);
       alert("Usuário cadastrado com sucesso!");
-      setFormUsuario({ nome: "", email: "", senha: "", telefone: "", cpf: "" });
+      setFormUsuario({ nome: "", email: "", senha: "", telefone: "" });
     } catch (err) {
       alert(err.message || "Erro ao cadastrar usuário.");
     }
@@ -463,17 +462,6 @@ function AdminSalas() {
                   placeholder="11999999999"
                   value={formUsuario.telefone}
                   onChange={(e) => setFormUsuario({ ...formUsuario, telefone: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div className="campo-grupo">
-                <label>CPF</label>
-                <input
-                  type="text"
-                  placeholder="Somente números"
-                  value={formUsuario.cpf}
-                  onChange={(e) => setFormUsuario({ ...formUsuario, cpf: e.target.value })}
                   required
                 />
               </div>

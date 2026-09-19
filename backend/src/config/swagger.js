@@ -121,7 +121,6 @@ export const swaggerDocument = {
                     nome: "João Silva",
                     email: "joao@email.com",
                     telefone: "11988888888",
-                    cpf: "123.456.789-00",
                     eAdmin: false,
                   },
                 ],
@@ -140,13 +139,12 @@ export const swaggerDocument = {
             "application/json": {
               schema: {
                 type: "object",
-                required: ["nome", "email", "senha", "telefone", "cpf"],
+                required: ["nome", "email", "senha", "telefone"],
                 properties: {
                   nome: { type: "string", example: "Maria Souza" },
                   email: { type: "string", example: "maria@email.com" },
                   senha: { type: "string", example: "senha123" },
                   telefone: { type: "string", example: "11977777777" },
-                  cpf: { type: "string", example: "98765432100" },
                 },
               },
             },
@@ -154,7 +152,7 @@ export const swaggerDocument = {
         },
         responses: {
           201: { description: "Usuário cadastrado com sucesso" },
-          409: { description: "E-mail ou CPF já cadastrado" },
+          409: { description: "E-mail já cadastrado" },
         },
       },
     },
@@ -196,7 +194,6 @@ export const swaggerDocument = {
           200: { description: "Usuário atualizado com sucesso" },
           401: { description: "Token ausente, inválido ou expirado" },
           404: { description: "Usuário não encontrado" },
-          409: { description: "E-mail ou CPF em uso por outro usuário" },
         },
       },
       delete: {

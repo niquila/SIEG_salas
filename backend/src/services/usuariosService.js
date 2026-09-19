@@ -6,14 +6,13 @@ import { prisma } from "../config/prisma.js";
  * @param {string} data.email - E-mail único
  * @param {string} data.senha - Senha de acesso (em texto puro, será convertida em hash)
  * @param {string} data.telefone - Telefone de contato
- * @param {string} data.cpf - CPF único
  * @returns {Promise<Object>} Objeto do usuário criado no banco de dados
- * @throws {Error} Erro HTTP 409 Conflict se e-mail ou CPF já estiverem cadastrados
+ * @throws {Error} Erro HTTP 409 Conflict se o e-mail já estiver cadastrado
  */
 
-// Cria um novo usuário no banco de dados, após validar unicidade de e-mail e CPF
+// Cria um novo usuário no banco de dados, após validar unicidade de e-mail
 export async function createUsuario(data) {
-  const { nome, email, senha, telefone, cpf } = data;
+  const { nome, email, senha, telefone } = data;
 
   const emailExistente = await prisma.usuario.findUnique({
     where: { email },
@@ -25,20 +24,10 @@ export async function createUsuario(data) {
     throw error;
   }
 
-  const cpfExistente = await prisma.usuario.findUnique({
-    where: { cpf },
-  });
-  if (cpfExistente) {
-    const error = new Error("CPF já cadastrado.");
-    error.status = 409;
-    error.code = "CPF_ALREADY_EXISTS";
-    throw error;
-  }
-
   const senhaHash = await bcrypt.hash(senha, 10);
 
   return await prisma.usuario.create({
-    data: { nome, email, senha: senhaHash, telefone, cpf },
+    data: { nome, email, senha: senhaHash, telefone },
   });
 }
 
@@ -72,7 +61,7 @@ export async function getUsuarioById(id) {
  * e no frontend (campo desabilitado na tela de perfil).
  */
 export async function updateUsuario(id, data) {
-  const { nome, senha, telefone, cpf } = data; // "email" não é extraído de propósito
+  const { nome, senha, telefone } = data; // "email" não é extraído de propósito
 
   const usuario = await prisma.usuario.findUnique({
     where: { id },
@@ -84,19 +73,7 @@ export async function updateUsuario(id, data) {
     throw error;
   }
 
-  if (cpf && cpf !== usuario.cpf) {
-    const cpfExistente = await prisma.usuario.findUnique({
-      where: { cpf },
-    });
-    if (cpfExistente) {
-      const error = new Error("CPF já em uso por outro usuário.");
-      error.status = 409;
-      error.code = "CPF_ALREADY_EXISTS";
-      throw error;
-    }
-  }
-
-  const dataToUpdate = { nome, telefone, cpf };
+  const dataToUpdate = { nome, telefone };
   if (senha) {
     dataToUpdate.senha = await bcrypt.hash(senha, 10);
   }

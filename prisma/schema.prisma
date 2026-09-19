@@ -18,7 +18,6 @@ model Usuario{
   email String @unique
   senha String
   telefone String
-  cpf String @unique
   dtCriacao DateTime @default(now()) @map("dt_criacao")
   dtAtualizacao DateTime @updatedAt @map("dt_atualizacao")
   eAdmin Boolean @default(false) @map("e_admin")

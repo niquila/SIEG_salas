@@ -23,17 +23,12 @@ export const createUsuarioSchema = z.object({
   telefone: z
     .string({ required_error: "O campo telefone é obrigatório." })
     .min(1, "O campo telefone é obrigatório."),
-
-  cpf: z
-    .string({ required_error: "O campo cpf é obrigatório." })
-    .min(1, "O campo cpf é obrigatório."),
 });
 
 export const updateUsuarioSchema = z
   .object({
     nome: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
     telefone: z.string().min(1, "O campo telefone é obrigatório."),
-    cpf: z.string().min(1, "O campo cpf é obrigatório."),
     senha: z.string().min(1, "A senha não pode ficar em branco."),
   })
   .partial();

@@ -25,7 +25,6 @@ async function main() {
       email: 'admin@coworking.com',
       senha: senhaAdminHash,
       telefone: '11999999999',
-      cpf: '123.456.789-00',
       eAdmin: true,
     },
   });
@@ -36,7 +35,6 @@ async function main() {
       email: 'membro@coworking.com',
       senha: senhaMembroHash,
       telefone: '11988888888',
-      cpf: '987.654.321-99',
       eAdmin: false,
     },
   });

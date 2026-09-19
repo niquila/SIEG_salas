@@ -7,7 +7,7 @@ import logoSieg from "../assets/logo-sieg.png";
 function Login() {
   const navigate = useNavigate();
   const [modoCadastro, setModoCadastro] = useState(false);
-  const [form, setForm] = useState({ nome: "", email: "", senha: "", telefone: "", cpf: "" });
+  const [form, setForm] = useState({ nome: "", email: "", senha: "", telefone: "" });
   const [erro, setErro] = useState("");
 
   async function handleSubmit(e) {
@@ -28,11 +28,10 @@ function Login() {
           email: form.email,
           senha: form.senha,
           telefone: form.telefone,
-          cpf: form.cpf,
         });
         alert("Conta criada com sucesso! Faça login.");
         setModoCadastro(false);
-        setForm({ nome: "", email: "", senha: "", telefone: "", cpf: "" });
+        setForm({ nome: "", email: "", senha: "", telefone: "" });
       } else {
         const dados = await login(form.email, form.senha);
 
@@ -102,17 +101,6 @@ function Login() {
                     placeholder="11999999999"
                     value={form.telefone}
                     onChange={(e) => setForm({ ...form, telefone: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="campo-grupo">
-                  <label>CPF</label>
-                  <input
-                    type="text"
-                    placeholder="Somente números"
-                    value={form.cpf}
-                    onChange={(e) => setForm({ ...form, cpf: e.target.value })}
                     required
                   />
                 </div>
