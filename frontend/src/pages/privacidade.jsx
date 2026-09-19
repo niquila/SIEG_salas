@@ -127,7 +127,7 @@ function Privacidade() {
           <p>
             Dúvidas sobre esta política, ou solicitações relacionadas aos seus dados, podem ser
             enviadas para{" "}
-            <a href="mailto:joaov.andrade.dev@gmail.com">joaov.andrade.dev@gmail.com</a>.
+            <a href="mailto:thais.rm.morais@gmail.com">thais.rm.morais@gmail.com</a>.
           </p>
         </div>
       </main>
