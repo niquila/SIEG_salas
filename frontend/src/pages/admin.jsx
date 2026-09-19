@@ -172,7 +172,7 @@ function AdminSalas() {
       </header>
 
       <main className="container-principal">
-        <div className="grid-acoes" style={{ gridTemplateColumns: "repeat(2, 1fr)" }}>
+        <div className="grid-acoes">
           <div 
             className={`card-acao ${abaAtiva === "salas" ? "ativo" : ""}`}
             onClick={() => setAbaAtiva("salas")}
