@@ -56,7 +56,7 @@ function AdminSalas() {
 
   function handleLogout() {
     logout();
-    navigate("/");
+    navigate("/login");
   }
 
   async function handleSalvarSala(e) {

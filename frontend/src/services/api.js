@@ -21,7 +21,7 @@ async function request(endpoint, options = {}) {
   // No login o 401 significa credencial inválida, então a mensagem é exibida na tela.
   if (res.status === 401 && endpoint !== "/auth/login") {
     logout();
-    window.location.href = "/";
+    window.location.href = "/login";
     throw new Error("Sessão expirada. Faça login novamente.");
   }
 

@@ -19,7 +19,7 @@ function Perfil() {
   useEffect(() => {
     const user = getUsuarioLogado();
     if (!user) {
-      navigate("/");
+      navigate("/login");
       return;
     }
     setUsuario(user);
@@ -74,7 +74,7 @@ function Perfil() {
 
   function handleSair() {
     fazerLogout();
-    navigate("/");
+    navigate("/login");
   }
 
   if (!usuario) return null;

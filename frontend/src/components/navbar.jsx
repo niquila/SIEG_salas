@@ -10,7 +10,7 @@ function Navbar() {
 
   function handleLogout() {
     logout();
-    navigate("/");
+    navigate("/login");
   }
 
   if (!usuario) return null;
