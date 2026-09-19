@@ -3,6 +3,7 @@ import Login from "./pages/login";
 import Salas from "./pages/salas";
 import Perfil from "./pages/perfil";
 import AdminSalas from "./pages/admin";
+import Privacidade from "./pages/privacidade";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/reservas" element={<Navigate to="/salas" replace />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/admin" element={<AdminSalas />} />
+        <Route path="/privacidade" element={<Privacidade />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
